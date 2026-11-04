@@ -15,3 +15,18 @@ export const navLinks = [
   { id: "reviews", label: "Reviews" },
   { id: "contact", label: "Contact" },
 ];
+
+export const hero = {
+  greeting: "Hello, I'm",
+  name: "ABASS A.",
+  roles: [
+    "Full-Stack Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Problem Solver",
+  ],
+  pitch:
+    "I build fast, responsive web apps from the interface to the API and the database, and I ship them live.",
+  availability: "Available for freelance work",
+  cvPath: "/CV.pdf",
+};

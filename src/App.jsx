@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
 import { navLinks } from "./constants";
 
 export default function App() {
@@ -6,6 +7,8 @@ export default function App() {
     <div id="top">
       <Navbar />
       <main id="main">
+        <Hero />
+        {/* temporary placeholders, replaced one by one in the next steps */}
         {navLinks.map((l) => (
           <section
             key={l.id}
