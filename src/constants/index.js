@@ -1,7 +1,7 @@
 // All site content lives here as data. Components only render it.
 
 export const siteConfig = {
-  name: "ABASS A.",
+  name: "Al-ameen Abass",
   logo: "TAN",
   email: "alameenolamideabass@gmail.com",
   github: "https://github.com/IbnAbass1401",
@@ -18,7 +18,7 @@ export const navLinks = [
 
 export const hero = {
   greeting: "Hello, I'm",
-  name: "ABASS A.",
+  name: "Al-ameen Abass",
   roles: [
     "Full-Stack Developer",
     "Frontend Developer",

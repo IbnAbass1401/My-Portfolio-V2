@@ -59,7 +59,7 @@ export default function Hero() {
               variants={item}
               className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl"
             >
-              {hero.greeting}{" "}
+              {hero.greeting}<br/>{" "}
               <span className="bg-linear-to-r from-glow to-primary bg-clip-text text-transparent">
                 {hero.name}
               </span>
