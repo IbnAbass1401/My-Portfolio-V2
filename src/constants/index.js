@@ -50,10 +50,10 @@ export const techStack = [
 
 export const about = {
   eyebrow: "About me",
-  title: "Full-stack developer, from first screen to live URL",
+  title: "Full-Stack Developer | From Idea to Deployment.",
   paragraphs: [
-    "I'm a self-taught full-stack developer based in Nigeria. I build complete web applications with the MERN stack, and I work in Next.js and TypeScript when a project calls for them.",
-    "I take a product all the way through: responsive interfaces, REST APIs with authentication, database design, payments, and deployment on Vercel and Render.",
+    "I'm a self-taught full-stack developer, passionate about building practical, scalable web applications. I work with React and JavaScript on the frontend, alongside Node.js, Express, and MongoDB on the backend. I also use Next.js and TypeScript to build more robust and modern applications.",
+    "I take a product all the way through: planning, responsive interfaces, REST APIs with authentication, database design, payments, and deployment on Vercel and Render.",
     "My work is live and clickable, so you can judge it yourself.",
   ],
   stats: [
