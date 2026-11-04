@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* hover styles also work on touch */
+@custom-variant hover (&:hover);
+
+/* Midnight Glow theme: gives you classes like bg-bg, bg-surface, text-ink, text-muted, border-line, text-glow */
+@theme {
+  --color-bg: #050a18;
+  --color-surface: #0b1530;
+  --color-line: #1a2a55;
+  --color-primary: #2563eb;
+  --color-glow: #38bdf8;
+  --color-ink: #e6eeff;
+  --color-muted: #8fa3c9;
+  --color-star: #fbbf24;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px; /* so the sticky navbar never covers section titles */
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow-x: hidden; /* no sideways scroll */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* respect "reduce motion" */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
