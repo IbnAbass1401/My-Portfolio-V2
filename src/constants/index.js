@@ -152,7 +152,7 @@ export const projects = {
       caseStudy: {
         problem:
           "Car businesses need a way to showcase their cars online and keep their listings up to date.",
-        role: null, 
+        role: "Built the whole app: the React interface with routing, browsing, listing details, and add, edit and delete flows, photo upload with browser-side resizing and compression, loading and toast feedback, a themed 404 page, the json-server API, and deployment on Vercel and Render with API requests proxied through the site.",
         stack:
           "React, Vite, React Router, Tailwind CSS, React Icons, React Toastify, json-server, Vercel, Render",
       },
