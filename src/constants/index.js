@@ -6,7 +6,22 @@ export const siteConfig = {
   github: "https://github.com/IbnAbass1401",
 };
 
-export const navLinks = [
+export const testimonials = {
+  eyebrow: "Reviews",
+  title: "Kind words",
+  items: [
+    { quote: null, name: "Muqadas", role: "CEO, GIST", rating: null },
+    { quote: null, name: null, role: null, rating: null },
+    { quote: null, name: null, role: null, rating: null },
+  ],
+};
+
+export const isTestimonialReady = (t) =>
+  Boolean(t.quote && t.name && t.role && t.rating);
+
+const hasReviews = testimonials.items.some(isTestimonialReady);
+
+const allLinks = [
   { id: "about", label: "About" },
   { id: "services", label: "Services" },
   { id: "work", label: "Work" },
@@ -14,6 +29,10 @@ export const navLinks = [
   { id: "reviews", label: "Reviews" },
   { id: "contact", label: "Contact" },
 ];
+
+export const navLinks = allLinks.filter(
+  (l) => l.id !== "reviews" || hasReviews || import.meta.env.DEV
+);
 
 export const hero = {
   greeting: "Hello, I'm",
@@ -156,6 +175,34 @@ export const projects = {
         stack:
           "React, Vite, React Router, Tailwind CSS, React Icons, React Toastify, json-server, Vercel, Render",
       },
+    },
+  ],
+};
+
+export const journey = {
+  eyebrow: "Journey",
+  title: "Always building, always learning",
+  items: [
+    {
+      period: "Now",
+      title: "Freelancing",
+      solved: "Turning client ideas into clear, working websites and web apps.",
+      challenges: "Vague requirements, tight deadlines and balancing speed with quality.",
+      learned: "Scoping work, communicating clearly and delivering on time.",
+    },
+    {
+      period: "2026",
+      title: "Full-Stack Internship",
+      solved: "Connecting UI, API and database into one secure product people can actually use.",
+      challenges: "Authentication, CORS, environment config and deployment.",
+      learned: "Designing APIs, protecting routes and debugging across client and server.",
+    },
+    {
+      period: "2026",
+      title: "Frontend Internship",
+      solved: "Turning designs into responsive, interactive interfaces.",
+      challenges: "Layouts that hold up on every screen, and state-driven logic.",
+      learned: "Clean reusable components, responsive design and solid JavaScript.",
     },
   ],
 };

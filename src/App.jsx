@@ -4,9 +4,12 @@ import Marquee from "./components/Marquee";
 import About from "./components/About";
 import Services from "./components/Services";
 import Projects from "./components/Projects";
+import Timeline from "./components/Timeline";
+import Testimonials from "./components/Testimonials";
 import { navLinks } from "./constants";
 
-const built = ["about", "services", "work"];
+
+const built = ["about", "services", "work", "journey", "reviews"];
 
 export default function App() {
   return (
@@ -18,6 +21,8 @@ export default function App() {
         <About />
         <Services />
         <Projects />
+        <Timeline />
+        <Testimonials />
         {navLinks
           .filter((l) => !built.includes(l.id))
           .map((l) => (
