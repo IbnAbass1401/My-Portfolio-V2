@@ -5,7 +5,7 @@ import { siteConfig } from "../constants";
 import SectionHeading from "./SectionHeading";
 
 const field =
-  "mt-1.5 block min-h-12 w-full rounded-xl border border-line bg-bg px-4 py-3 text-base text-ink placeholder:text-muted/60 transition duration-300 focus:border-glow focus:outline-none focus:shadow-[0_0_18px_rgba(56,189,248,0.35)]";
+  "mt-1.5 block min-h-12 w-full rounded-xl border border-line bg-bg px-4 py-3 text-base text-ink placeholder:text-muted/80 transition duration-300 focus:border-glow focus:outline-none focus:shadow-[0_0_18px_rgba(56,189,248,0.35)]";
 
 const chip =
   "inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold transition duration-300";

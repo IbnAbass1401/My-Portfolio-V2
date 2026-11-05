@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { techStack } from "../constants";
 
 function Group({ hidden = false }) {
@@ -22,21 +23,51 @@ function Group({ hidden = false }) {
 }
 
 export default function Marquee() {
+  const [paused, setPaused] = useState(false);
+
   return (
     <section
       aria-label="Technologies I work with"
-      className="relative overflow-hidden border-y border-line/60 bg-surface/30 py-5"
-      style={{
-        maskImage:
-          "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
-        WebkitMaskImage:
-          "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
-      }}
+      className="relative border-y border-line/60 bg-surface/30 py-5"
     >
-      <div className="flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:w-auto motion-reduce:animate-none motion-reduce:justify-center">
-        <Group />
-        <Group hidden />
+      <div
+        className="overflow-hidden"
+        style={{
+          maskImage:
+            "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+        }}
+      >
+        <div
+          className={`flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:w-auto motion-reduce:animate-none motion-reduce:justify-center ${
+            paused ? "[animation-play-state:paused]" : ""
+          }`}
+        >
+          <Group />
+          <Group hidden />
+        </div>
       </div>
+
+      {/* pause / play: for touch and keyboard users */}
+      <button
+        type="button"
+        onClick={() => setPaused((p) => !p)}
+        aria-pressed={paused}
+        aria-label={paused ? "Play scrolling technologies" : "Pause scrolling technologies"}
+        className="absolute right-2 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/90 text-ink backdrop-blur transition hover:border-glow/60 hover:text-glow motion-reduce:hidden"
+      >
+        {paused ? (
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className="size-4">
+            <path d="M6 4.5v11l9-5.5-9-5.5Z" />
+          </svg>
+        ) : (
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className="size-4">
+            <rect x="5" y="4" width="3.5" height="12" rx="1" />
+            <rect x="11.5" y="4" width="3.5" height="12" rx="1" />
+          </svg>
+        )}
+      </button>
     </section>
   );
 }

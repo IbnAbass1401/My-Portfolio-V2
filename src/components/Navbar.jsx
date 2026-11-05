@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { navLinks, siteConfig } from "../constants";
 
@@ -9,6 +9,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
+  const menuBtn = useRef(null);
 
   // solid background after scrolling; clear the active link at the very top
   useEffect(() => {
@@ -38,12 +39,17 @@ export default function Navbar() {
     return () => observer.disconnect();
   }, []);
 
-  // mobile menu: lock page scroll, close on Esc, close if screen grows
+  // mobile menu: lock page scroll, Esc closes and returns focus to the button, close if screen grows
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        menuBtn.current?.focus();
+      }
+    };
     const onResize = () => window.innerWidth >= 768 && setOpen(false);
     window.addEventListener("keydown", onKey);
     window.addEventListener("resize", onResize);
@@ -58,7 +64,7 @@ export default function Navbar() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-60 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-white"
       >
         Skip to content
       </a>
@@ -88,10 +94,9 @@ export default function Navbar() {
               <li key={l.id}>
                 <a
                   href={`#${l.id}`}
+                  aria-current={active === l.id ? "true" : undefined}
                   className={`${underline} transition-colors duration-300 hover:text-ink ${
-                    active === l.id
-                      ? "text-ink after:w-full"
-                      : "text-muted"
+                    active === l.id ? "text-ink after:w-full" : "text-muted"
                   }`}
                 >
                   {l.label}
@@ -102,6 +107,7 @@ export default function Navbar() {
 
           {/* mobile menu button */}
           <button
+            ref={menuBtn}
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
@@ -111,7 +117,7 @@ export default function Navbar() {
           >
             <span
               className={`absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 rounded bg-ink transition-all duration-300 ${
-                open ? "-translate-y-1/2 rotate-45" : "-translate-y-2.25"
+                open ? "-translate-y-1/2 rotate-45" : "-translate-y-[9px]"
               }`}
             />
             <span
@@ -121,7 +127,7 @@ export default function Navbar() {
             />
             <span
               className={`absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 rounded bg-ink transition-all duration-300 ${
-                open ? "-translate-y-1/2 -rotate-45" : "translate-y-1.75"
+                open ? "-translate-y-1/2 -rotate-45" : "translate-y-[7px]"
               }`}
             />
           </button>
@@ -144,6 +150,7 @@ export default function Navbar() {
                     <a
                       href={`#${l.id}`}
                       onClick={() => setOpen(false)}
+                      aria-current={active === l.id ? "true" : undefined}
                       className={`flex min-h-12 items-center text-lg transition-colors hover:text-glow ${
                         active === l.id ? "text-glow" : "text-muted"
                       }`}
@@ -164,6 +171,7 @@ export default function Navbar() {
           <motion.button
             type="button"
             aria-label="Close menu"
+            tabIndex={-1}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
