@@ -16,8 +16,8 @@ export default function ProjectCard({ project, index }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="group grid overflow-hidden rounded-2xl border border-line bg-surface transition duration-300 hover:border-glow/50 hover:shadow-[0_0_40px_rgba(56,189,248,0.2)] md:grid-cols-2 md:items-center lg:grid-cols-[1.15fr_1fr]"
     >
-      {/* screenshot: same box for every project, the full image always fits inside */}
-      <div className="relative flex aspect-16/10 w-full items-center justify-center overflow-hidden border-b border-line bg-linear-to-br from-bg via-surface to-bg p-3 sm:p-4 md:border-b-0 md:border-r">
+      {/* screenshot: same box for every project; the padding gives the image room to grow on hover */}
+      <div className="relative flex aspect-16/10 w-full items-center justify-center overflow-hidden border-b border-line bg-linear-to-br from-bg via-surface to-bg p-4 sm:p-5 md:border-b-0 md:border-r">
         {failed ? (
           <div
             aria-hidden="true"
@@ -33,7 +33,7 @@ export default function ProjectCard({ project, index }) {
             height="800"
             loading="lazy"
             onError={() => setFailed(true)}
-            className="max-h-full max-w-full rounded-lg object-contain shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
+            className="max-h-full max-w-full scale-[0.9] rounded-lg object-contain shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition duration-500 ease-out group-hover:scale-[1.03] group-hover:shadow-[0_18px_60px_rgba(56,189,248,0.28)] motion-reduce:transition-none"
           />
         )}
       </div>
