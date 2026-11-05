@@ -10,9 +10,27 @@ export const testimonials = {
   eyebrow: "Reviews",
   title: "Kind words",
   items: [
-    { quote: null, name: "Muqadas", role: "CEO, GIST", rating: null },
-    { quote: null, name: null, role: null, rating: null },
-    { quote: null, name: null, role: null, rating: null },
+    {
+      quote:
+        "What stands out is the attention to detail and the effort put into making every project functional, clean, and easy to use.",
+      name: "Abdullahi Zubair",
+      role: "Owner, DallahDigital",
+      rating: 5,
+    },
+    {
+      quote:
+        "It's impressive to see someone take an idea from scratch and turn it into a working product. The commitment to learning and improving really shows.",
+      name: "Tawakalt Jumuah",
+      role: "CEO, TAWID",
+      rating: 5,
+    },
+    {
+      quote:
+        "Reliable, dedicated, and committed to quality. He always puts in the effort to deliver excellent work within the agreed timeframe.",
+      name: "Peace Adebayo",
+      role: "CEO, Luxe Studio",
+      rating: 5,
+    },
   ],
 };
 
@@ -118,6 +136,7 @@ export const services = {
   ],
 };
 
+
 export const projects = {
   eyebrow: "Selected work",
   title: "Projects I've built and shipped",
@@ -178,6 +197,7 @@ export const projects = {
     },
   ],
 };
+
 
 export const journey = {
   eyebrow: "Journey",
