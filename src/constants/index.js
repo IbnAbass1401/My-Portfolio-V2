@@ -1,4 +1,3 @@
-// All site content lives here as data. Components only render it.
 
 export const siteConfig = {
   name: "Al-ameen Abass",
@@ -100,8 +99,6 @@ export const services = {
   ],
 };
 
-// caseStudy rows: write your own text, or leave null.
-// null rows show as a yellow "add yours" box in dev and are hidden in production.
 export const projects = {
   eyebrow: "Selected work",
   title: "Projects I've built and shipped",
@@ -117,12 +114,11 @@ export const projects = {
       code: "https://github.com/IbnAbass1401/Ember-menswear",
       note: "The API runs on a free Render plan, so the first load can take up to a minute.",
       caseStudy: {
-        problem: null,
+        problem:
+          "Businesses that sell products need a website where customers can browse, order and pay online.",
         role: "Built the full stack: the Next.js and TypeScript storefront, the Express API, MongoDB data, Paystack payments and Cloudinary image uploads, deployed on Vercel and Render.",
         stack:
           "Next.js, TypeScript, Tailwind CSS, Framer Motion, Zustand, Node.js, Express, MongoDB, Paystack, Cloudinary",
-        challenge: null,
-        solution: null,
       },
     },
     {
@@ -136,12 +132,11 @@ export const projects = {
       code: "https://github.com/IbnAbass1401/Taskflow",
       note: null,
       caseStudy: {
-        problem: null,
+        problem:
+          "People need a simple way to track their tasks and stay productive.",
         role: "Built the full stack: the React interface, the Express REST API, MongoDB models and JWT authentication.",
         stack:
           "React (Vite), React Router, Axios, Tailwind CSS, Node.js, Express, MongoDB with Mongoose, JWT, bcryptjs, Vercel",
-        challenge: null,
-        solution: null,
       },
     },
     {
@@ -155,12 +150,11 @@ export const projects = {
       code: "https://github.com/IbnAbass1401/Car-Haven",
       note: "The API runs on a free Render plan, so the first load can take up to a minute.",
       caseStudy: {
-        problem: null,
-        role: null, // write what YOU added beyond the guided build
+        problem:
+          "Car businesses need a way to showcase their cars online and keep their listings up to date.",
+        role: null, 
         stack:
           "React, Vite, React Router, Tailwind CSS, React Icons, React Toastify, json-server, Vercel, Render",
-        challenge: null,
-        solution: null,
       },
     },
   ],

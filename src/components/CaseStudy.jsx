@@ -2,12 +2,10 @@ const rows = [
   { key: "problem", label: "The problem", hint: "Add 1–2 sentences: who needed this and what was painful without it" },
   { key: "role", label: "My role", hint: "Add what YOU designed and built" },
   { key: "stack", label: "Stack", hint: "Add the technologies you used" },
-  { key: "challenge", label: "Hardest challenge", hint: "Add: the one bug or decision that was actually hard" },
-  { key: "solution", label: "How I solved it", hint: "Add: what you tried, what worked, what you learned" },
 ];
 
 export default function CaseStudy({ data }) {
-  const dev = import.meta.env.DEV; // placeholders only show while developing
+  const dev = import.meta.env.DEV; 
   const hasContent = rows.some((r) => data?.[r.key]);
   if (!hasContent && !dev) return null;
 

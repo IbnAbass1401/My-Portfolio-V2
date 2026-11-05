@@ -13,11 +13,11 @@ export default function ProjectCard({ project, index }) {
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, ease: "easeOut", delay: (index % 3) * 0.12 }}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface transition duration-300 hover:-translate-y-1.5 hover:border-glow/50 hover:shadow-[0_0_34px_rgba(56,189,248,0.22)]"
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="group grid overflow-hidden rounded-2xl border border-line bg-surface transition duration-300 hover:border-glow/50 hover:shadow-[0_0_40px_rgba(56,189,248,0.2)] md:grid-cols-2 md:items-center lg:grid-cols-[1.15fr_1fr]"
     >
-      {/* screenshot */}
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-line bg-bg">
+      {/* screenshot: same size and shape for every project */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line bg-bg md:border-b-0 md:border-r">
         {failed ? (
           <div
             aria-hidden="true"
@@ -38,11 +38,16 @@ export default function ProjectCard({ project, index }) {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col p-6">
-        <h3 className="text-xl font-bold transition-colors group-hover:text-glow">
+      <div className="p-6 sm:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-glow">
+          Project {String(index + 1).padStart(2, "0")}
+        </p>
+        <h3 className="mt-2 text-2xl font-extrabold transition-colors group-hover:text-glow">
           {project.title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted">{project.description}</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+          {project.description}
+        </p>
 
         <ul className="mt-4 flex flex-wrap gap-2">
           {project.tags.map((t) => (
@@ -55,13 +60,13 @@ export default function ProjectCard({ project, index }) {
           ))}
         </ul>
 
-        <div className="mt-5 flex flex-wrap gap-3">
+        <div className="mt-6 flex flex-wrap gap-3">
           <a
             href={project.live}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${project.title} live site (opens in a new tab)`}
-            className={`${linkBtn} bg-primary text-white hover:shadow-[0_0_24px_rgba(56,189,248,0.5)]`}
+            className={`${linkBtn} bg-primary text-white hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(56,189,248,0.5)]`}
           >
             Live ↗
           </a>
@@ -70,7 +75,7 @@ export default function ProjectCard({ project, index }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${project.title} source code on GitHub (opens in a new tab)`}
-            className={`${linkBtn} border border-line text-ink hover:border-glow/50 hover:bg-bg`}
+            className={`${linkBtn} border border-line text-ink hover:-translate-y-0.5 hover:border-glow/50 hover:bg-bg`}
           >
             Code ↗
           </a>

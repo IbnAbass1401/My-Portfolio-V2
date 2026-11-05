@@ -10,8 +10,8 @@ export default function Projects() {
         <div className="mx-auto max-w-6xl">
           <SectionHeading eyebrow={projects.eyebrow} title={projects.title} />
 
-          {/* items-start: opening one case study doesn't stretch the other cards */}
-          <ul className="mt-12 grid items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {/* one project per row */}
+          <ul className="mt-12 grid gap-8">
             {projects.items.map((p, i) => (
               <ProjectCard key={p.id} project={p} index={i} />
             ))}
