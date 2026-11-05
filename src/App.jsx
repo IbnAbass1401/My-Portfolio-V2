@@ -6,10 +6,8 @@ import Services from "./components/Services";
 import Projects from "./components/Projects";
 import Timeline from "./components/Timeline";
 import Testimonials from "./components/Testimonials";
-import { navLinks } from "./constants";
-
-
-const built = ["about", "services", "work", "journey", "reviews"];
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -23,20 +21,9 @@ export default function App() {
         <Projects />
         <Timeline />
         <Testimonials />
-        {navLinks
-          .filter((l) => !built.includes(l.id))
-          .map((l) => (
-            <section
-              key={l.id}
-              id={l.id}
-              className="flex min-h-screen items-center justify-center border-t border-line/40 px-5"
-            >
-              <h2 className="text-2xl font-bold text-muted">
-                {l.label} <span className="text-glow">(placeholder)</span>
-              </h2>
-            </section>
-          ))}
+        <Contact />
       </main>
+      <Footer />
     </div>
   );
 }
