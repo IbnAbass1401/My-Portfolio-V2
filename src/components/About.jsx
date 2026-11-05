@@ -1,4 +1,5 @@
-import { motion, MotionConfig } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { animate, motion, MotionConfig, useInView, useReducedMotion } from "framer-motion";
 import { about } from "../constants";
 import SectionHeading from "./SectionHeading";
 
@@ -8,6 +9,38 @@ const fadeUp = (delay = 0) => ({
   viewport: { once: true, margin: "-60px" },
   transition: { duration: 0.6, ease: "easeOut", delay },
 });
+
+
+function StatValue({ value }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const reduce = useReducedMotion();
+  const match = /^(\d+)(.*)$/.exec(value);
+  const target = match ? Number(match[1]) : null;
+  const suffix = match ? match[2] : "";
+  const [n, setN] = useState(0);
+
+  useEffect(() => {
+    if (target === null || !inView || reduce) return;
+    const controls = animate(0, target, {
+      duration: 1.4,
+      ease: "easeOut",
+      onUpdate: (v) => setN(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [inView, target, reduce]);
+
+  if (target === null) return <span ref={ref}>{value}</span>;
+  const shown = reduce || !inView ? (reduce ? target : 0) : n;
+  return (
+    <span ref={ref} aria-label={value}>
+      <span aria-hidden="true">
+        {shown}
+        {suffix}
+      </span>
+    </span>
+  );
+}
 
 export default function About() {
   return (
@@ -32,7 +65,7 @@ export default function About() {
                 className="group rounded-2xl border border-line bg-surface p-6 transition duration-300 hover:-translate-y-1 hover:border-glow/50 hover:shadow-[0_0_30px_rgba(56,189,248,0.2)]"
               >
                 <p className="bg-linear-to-r from-glow to-primary bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl">
-                  {s.value}
+                  <StatValue value={s.value} />
                 </p>
                 <p className="mt-2 text-sm text-muted transition-colors group-hover:text-ink">
                   {s.label}

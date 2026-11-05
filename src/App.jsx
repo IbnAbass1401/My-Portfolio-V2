@@ -8,10 +8,14 @@ import Timeline from "./components/Timeline";
 import Testimonials from "./components/Testimonials";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import ScrollProgress from "./components/ScrollProgress";
+import CursorGlow from "./components/CursorGlow";
 
 export default function App() {
   return (
     <div id="top">
+      <ScrollProgress />
+      <CursorGlow />
       <Navbar />
       <main id="main">
         <Hero />
