@@ -27,16 +27,37 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 72px; /* so the sticky navbar never covers section titles */
+  scroll-padding-top: 72px; 
   color-scheme: dark;
+  -webkit-text-size-adjust: 100%; /* stable text size when a phone rotates */
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-x: clip; 
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  overflow-x: hidden; /* no sideways scroll */
+  overflow-x: hidden; 
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent; /* no grey flash when tapping links on mobile */
+}
+main section {
+  overflow-x: hidden; /* older browsers */
+  overflow-x: clip;
+}
+
+/* clear focus ring for keyboard users (mouse clicks don't show it) */
+:focus-visible {
+  outline: 2px solid var(--color-glow);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.3);
+  color: #fff;
 }
 
 /* respect "reduce motion" */
