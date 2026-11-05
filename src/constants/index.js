@@ -112,7 +112,7 @@ export const projects = {
       tags: ["Next.js", "TypeScript", "Tailwind", "Express", "MongoDB", "Paystack", "Cloudinary"],
       live: "https://ember-menswear.vercel.app",
       code: "https://github.com/IbnAbass1401/Ember-menswear",
-      note: "The API runs on a free Render plan, so the first load can take up to a minute.",
+      note: null,
       caseStudy: {
         problem:
           "Businesses that sell products need a website where customers can browse, order and pay online.",
@@ -148,7 +148,7 @@ export const projects = {
       tags: ["React", "Vite", "Tailwind", "React Router", "json-server"],
       live: "https://car-haven-sandy.vercel.app",
       code: "https://github.com/IbnAbass1401/Car-Haven",
-      note: "The API runs on a free Render plan, so the first load can take up to a minute.",
+      note: null,
       caseStudy: {
         problem:
           "Car businesses need a way to showcase their cars online and keep their listings up to date.",
