@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-// Soft light that follows the mouse. Desktop only (fine pointer), off for reduced motion.
+
 export default function CursorGlow() {
   const ref = useRef(null);
 
@@ -41,7 +41,7 @@ export default function CursorGlow() {
     <div
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 -z-10 size-[500px] rounded-full opacity-0 transition-opacity duration-500"
+      className="pointer-events-none fixed left-0 top-0 -z-10 size-125 rounded-full opacity-0 transition-opacity duration-500"
       style={{
         background:
           "radial-gradient(circle, rgba(56,189,248,0.10) 0%, rgba(37,99,235,0.05) 40%, transparent 70%)",

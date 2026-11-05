@@ -5,6 +5,8 @@ import CaseStudy from "./CaseStudy";
 const linkBtn =
   "inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-semibold transition duration-300";
 
+const toWebp = (src) => src.replace(/\.\w+$/, ".webp");
+
 export default function ProjectCard({ project, index }) {
   const [failed, setFailed] = useState(false);
 
@@ -26,15 +28,19 @@ export default function ProjectCard({ project, index }) {
             {project.title}
           </div>
         ) : (
-          <img
-            src={project.image}
-            alt={`Screenshot of ${project.title}`}
-            width="1280"
-            height="800"
-            loading="lazy"
-            onError={() => setFailed(true)}
-            className="max-h-full max-w-full scale-[0.9] rounded-lg object-contain shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition duration-500 ease-out group-hover:scale-[1.03] group-hover:shadow-[0_18px_60px_rgba(56,189,248,0.28)] motion-reduce:transition-none"
-          />
+          <picture>
+            <source srcSet={toWebp(project.image)} type="image/webp" />
+            <img
+              src={project.image}
+              alt={`Screenshot of ${project.title}`}
+              width="1280"
+              height="800"
+              loading="lazy"
+              decoding="async"
+              onError={() => setFailed(true)}
+              className="max-h-full max-w-full scale-[0.9] rounded-lg object-contain shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition duration-500 ease-out group-hover:scale-[1.03] group-hover:shadow-[0_18px_60px_rgba(56,189,248,0.28)] motion-reduce:transition-none"
+            />
+          </picture>
         )}
       </div>
 
