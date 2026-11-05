@@ -63,7 +63,7 @@ export const hero = {
   ],
   pitch:
     "I build fast, responsive web apps from the interface to the API and the database, and I ship them live.",
-  availability: "Available for freelance work",
+  availability: "Available for work",
   cvPath: "/CV.pdf",
 };
 
