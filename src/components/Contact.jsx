@@ -81,7 +81,7 @@ export default function Contact() {
       <section id="contact" className="relative px-5 py-20 sm:px-8 sm:py-28">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[130px]"
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-115 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[130px]"
         />
 
         <div className="mx-auto max-w-6xl">
@@ -211,7 +211,7 @@ export default function Contact() {
                   </div>
 
                   {/* spam trap: real people never see or fill this */}
-                  <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                  <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
                     <label htmlFor="company">Company</label>
                     <input
                       id="company"
