@@ -4,7 +4,7 @@ import Hero from "./components/Hero";
 import Marquee from "./components/Marquee";
 import { navLinks } from "./constants";
 
-
+// everything below the first screen loads on demand
 const About = lazy(() => import("./components/About"));
 const Services = lazy(() => import("./components/Services"));
 const Projects = lazy(() => import("./components/Projects"));
@@ -15,7 +15,7 @@ const Footer = lazy(() => import("./components/Footer"));
 const ScrollProgress = lazy(() => import("./components/ScrollProgress"));
 const CursorGlow = lazy(() => import("./components/CursorGlow"));
 
-
+// rough heights so the page doesn't jump when the real sections replace the placeholders
 const heights = {
   about: "80svh",
   services: "100svh",
@@ -33,7 +33,7 @@ function Placeholders() {
     ));
 }
 
-
+// renders only once every lazy section above it has loaded
 function Mounted({ onMount }) {
   useEffect(() => {
     onMount();
@@ -42,10 +42,12 @@ function Mounted({ onMount }) {
 }
 
 export default function App() {
+  // open straight to the rest of the page if the link has a #section
   const [ready, setReady] = useState(() => window.location.hash.length > 1);
   const [synced, setSynced] = useState(0);
   const sentinel = useRef(null);
 
+  // build the rest of the page on the first scroll, tap, key press, or when the end of the first screen is reached
   useEffect(() => {
     if (ready) return;
     const go = () => setReady(true);

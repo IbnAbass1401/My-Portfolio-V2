@@ -5,14 +5,13 @@ import { navLinks, siteConfig } from "../constants";
 const underline =
   "relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:rounded after:bg-glow after:transition-all after:duration-300 hover:after:w-full";
 
-// syncKey changes when the real sections replace the placeholders, so the highlight keeps working
 export default function Navbar({ syncKey = 0 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
   const menuBtn = useRef(null);
 
-  // solid background after scrolling; clear the active link at the very top
+ 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 8);
@@ -23,7 +22,7 @@ export default function Navbar({ syncKey = 0 }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // highlight the link of the section in the middle of the screen
+
   useEffect(() => {
     const sections = navLinks
       .map((l) => document.getElementById(l.id))
