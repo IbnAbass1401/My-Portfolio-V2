@@ -5,7 +5,8 @@ import { navLinks, siteConfig } from "../constants";
 const underline =
   "relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:rounded after:bg-glow after:transition-all after:duration-300 hover:after:w-full";
 
-export default function Navbar() {
+// syncKey changes when the real sections replace the placeholders, so the highlight keeps working
+export default function Navbar({ syncKey = 0 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
@@ -37,7 +38,7 @@ export default function Navbar() {
     );
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
+  }, [syncKey]);
 
   // mobile menu: lock page scroll, Esc closes and returns focus to the button, close if screen grows
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function Navbar() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-80 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-white"
       >
         Skip to content
       </a>
@@ -117,7 +118,7 @@ export default function Navbar() {
           >
             <span
               className={`absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 rounded bg-ink transition-all duration-300 ${
-                open ? "-translate-y-1/2 rotate-45" : "-translate-y-[9px]"
+                open ? "-translate-y-1/2 rotate-45" : "-translate-y-2.25"
               }`}
             />
             <span
@@ -127,7 +128,7 @@ export default function Navbar() {
             />
             <span
               className={`absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 rounded bg-ink transition-all duration-300 ${
-                open ? "-translate-y-1/2 -rotate-45" : "translate-y-[7px]"
+                open ? "-translate-y-1/2 -rotate-45" : "translate-y-1.75"
               }`}
             />
           </button>
