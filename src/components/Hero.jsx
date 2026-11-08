@@ -1,7 +1,14 @@
-import { motion, MotionConfig, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  MotionConfig,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import useTyping from "../hooks/useTyping";
 import { hero } from "../constants";
-import EarthFallback from "./canvas/EarthFallback";
+import HeroGlobe from "./canvas/HeroGlobe";
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.12 } } };
 const item = {
@@ -16,9 +23,19 @@ export default function Hero() {
   const reduce = useReducedMotion();
   const typed = useTyping(hero.roles, { enabled: !reduce });
 
+  // the globe drifts down and fades a little while you scroll past the hero
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const orbY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const orbOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0.25]);
+
   return (
     <MotionConfig reducedMotion="user">
       <section
+        ref={sectionRef}
         id="hero"
         className="relative isolate flex min-h-[calc(100svh-4rem)] items-center overflow-hidden"
       >
@@ -59,7 +76,7 @@ export default function Hero() {
               variants={item}
               className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl"
             >
-              {hero.greeting}<br/>{" "}
+              {hero.greeting}{" "}
               <span className="bg-linear-to-r from-glow to-primary bg-clip-text text-transparent">
                 {hero.name}
               </span>
@@ -114,11 +131,13 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
           >
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <EarthFallback />
+            <motion.div style={reduce ? undefined : { y: orbY, opacity: orbOpacity }}>
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <HeroGlobe />
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>

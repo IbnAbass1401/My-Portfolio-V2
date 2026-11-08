@@ -15,6 +15,18 @@ export default function Footer() {
           Back to top ↑
         </a>
       </div>
+      <p className="mx-auto mt-2 max-w-6xl text-center text-xs text-muted/80 sm:text-left">
+        Earth textures:{" "}
+        <a
+          href="https://www.solarsystemscope.com/textures/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 transition hover:text-glow"
+        >
+          Solar System Scope
+        </a>{" "}
+        (CC BY 4.0).
+      </p>
     </footer>
   );
 }
