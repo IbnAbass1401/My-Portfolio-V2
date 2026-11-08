@@ -1,12 +1,15 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Stars, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
 // ---- settings you can tweak ----
 const NIGERIA = { lat: 9.1, lon: 8.7 };
 const SPIN_SPEED = 0.18; // radians per second (bigger = faster)
-const GLOW = "#38bdf8";
+const DEFAULT_TILT = 0.18; // slight tilt toward the viewer
+const DRAG_SENSITIVITY = 0.008; // radians per pixel dragged
+
+const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
 // turning the globe by this angle brings a longitude to face the viewer
 const faceLongitude = (lon) => -(Math.PI / 2 + (lon * Math.PI) / 180);
@@ -174,8 +177,11 @@ export default function Earth({ onReady }) {
     "/earth/earth-spec.webp",
     "/earth/earth-clouds.webp",
   ]);
-  const spin = useRef(null);
+  const gl = useThree((s) => s.gl);
+  const tilt = useRef(null); // outer group: up/down tilt
+  const spin = useRef(null); // inner group: the turning
   const cloudRef = useRef(null);
+  const drag = useRef({ active: false, id: null, x: 0, y: 0, t: 0, vy: 0 });
 
   // the shader reads the raw map colours
   useLayoutEffect(() => {
@@ -185,6 +191,12 @@ export default function Earth({ onReady }) {
     });
   }, [day, spec, clouds]);
 
+  // starting position: Nigeria facing you
+  useLayoutEffect(() => {
+    tilt.current.rotation.x = DEFAULT_TILT;
+    spin.current.rotation.y = faceLongitude(NIGERIA.lon);
+  }, []);
+
   const uniforms = useMemo(() => ({ uDay: { value: day }, uSpec: { value: spec } }), [day, spec]);
 
   // textures are loaded (Suspense finished): tell the page it can fade the globe in
@@ -192,20 +204,84 @@ export default function Earth({ onReady }) {
     onReady?.();
   }, [onReady]);
 
-  useFrame(({ clock }, delta) => {
-    if (spin.current) {
-      spin.current.rotation.y = faceLongitude(NIGERIA.lon) + clock.elapsedTime * SPIN_SPEED;
+  // grab and turn: a mouse can drag any direction; on a touch screen only sideways drags turn it,
+  // so a vertical swipe still scrolls the page
+  useEffect(() => {
+    const el = gl.domElement;
+    const d = drag.current;
+    el.style.touchAction = "pan-y";
+    el.style.cursor = "grab";
+
+    const down = (e) => {
+      d.active = true;
+      d.id = e.pointerId;
+      d.x = e.clientX;
+      d.y = e.clientY;
+      d.t = performance.now();
+      d.vy = 0;
+      el.style.cursor = "grabbing";
+      if (e.pointerType === "mouse") el.setPointerCapture?.(e.pointerId);
+    };
+    const move = (e) => {
+      if (!d.active || e.pointerId !== d.id || !spin.current) return;
+      const now = performance.now();
+      const dt = Math.max((now - d.t) / 1000, 0.008);
+      const dx = e.clientX - d.x;
+      const dy = e.clientY - d.y;
+      d.x = e.clientX;
+      d.y = e.clientY;
+      d.t = now;
+
+      const turn = dx * DRAG_SENSITIVITY;
+      spin.current.rotation.y += turn;
+      d.vy = d.vy * 0.6 + clamp(turn / dt, -8, 8) * 0.4; // remembers the flick speed
+
+      if (e.pointerType === "mouse" && tilt.current) {
+        tilt.current.rotation.x = clamp(tilt.current.rotation.x + dy * DRAG_SENSITIVITY, -0.9, 1.1);
+      }
+    };
+    const up = (e) => {
+      if (e.pointerId !== d.id) return;
+      d.active = false;
+      el.style.cursor = "grab";
+      if (performance.now() - d.t > 80) d.vy = 0; // held still before letting go: no flick
+    };
+
+    el.addEventListener("pointerdown", down);
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerup", up);
+    el.addEventListener("pointercancel", up);
+    return () => {
+      el.removeEventListener("pointerdown", down);
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerup", up);
+      el.removeEventListener("pointercancel", up);
+    };
+  }, [gl]);
+
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const d = drag.current;
+
+    if (!d.active) {
+      // continues on its own, plus the leftover momentum from a flick
+      if (spin.current) spin.current.rotation.y += (SPIN_SPEED + d.vy) * dt;
+      d.vy *= Math.exp(-2.5 * dt);
+      // settles gently back to the original tilt
+      if (tilt.current) {
+        tilt.current.rotation.x += (DEFAULT_TILT - tilt.current.rotation.x) * (1 - Math.exp(-1.2 * dt));
+      }
     }
+
     // clouds drift a little faster than the ground
-    if (cloudRef.current) cloudRef.current.rotation.y += Math.min(delta, 0.05) * 0.03;
+    if (cloudRef.current) cloudRef.current.rotation.y += dt * 0.03;
   });
 
   return (
     <>
       <Stars radius={60} depth={40} count={1500} factor={3} saturation={0} fade speed={0.6} />
 
-      {/* slight tilt toward the viewer so the north is visible */}
-      <group rotation={[0.18, 0, 0]}>
+      <group ref={tilt}>
         <group ref={spin}>
           <mesh>
             <sphereGeometry args={[1, 64, 64]} />
