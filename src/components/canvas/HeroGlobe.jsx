@@ -50,7 +50,8 @@ function check3D() {
 
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
     return { reason: `weak device (${navigator.hardwareConcurrency} CPU cores)` };
-  if (navigator.deviceMemory && navigator.deviceMemory <= 2)
+  // 2 GB phones are allowed now; only 1 GB or less keeps the orb
+  if (navigator.deviceMemory && navigator.deviceMemory <= 1)
     return { reason: `low memory (${navigator.deviceMemory} GB)` };
 
   return { reason: null, lite };
@@ -169,7 +170,7 @@ export default function HeroGlobe() {
         </div>
       )}
 
-      {/* only visible with ?globe=debug */}
+      {/* only visible with ?globe=debug or ?globe=force */}
       {DEBUG && (
         <p className="absolute inset-x-0 -bottom-14 z-10 rounded-lg bg-black/80 px-3 py-2 text-center text-[11px] leading-snug text-glow">
           {note}
