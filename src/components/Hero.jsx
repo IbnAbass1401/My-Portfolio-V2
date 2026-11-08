@@ -32,6 +32,9 @@ export default function Hero() {
   const orbY = useTransform(scrollYProgress, [0, 1], [0, 90]);
   const orbOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0.25]);
 
+  // each word stays whole ("Al-ameen" never splits at the hyphen)
+  const nameWords = hero.name.split(" ");
+
   return (
     <MotionConfig reducedMotion="user">
       <section
@@ -41,8 +44,8 @@ export default function Hero() {
       >
         {/* glow background */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute -left-24 top-0 size-105 rounded-full bg-primary/25 blur-[120px]" />
-          <div className="absolute -right-24 bottom-0 size-95 rounded-full bg-glow/15 blur-[120px]" />
+          <div className="absolute -left-24 top-0 size-[420px] rounded-full bg-primary/25 blur-[120px]" />
+          <div className="absolute -right-24 bottom-0 size-[380px] rounded-full bg-glow/15 blur-[120px]" />
           <div
             className="absolute inset-0"
             style={{
@@ -74,11 +77,16 @@ export default function Hero() {
 
             <motion.h1
               variants={item}
-              className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl"
+              className="text-[1.9rem] font-extrabold leading-tight min-[380px]:text-4xl sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl"
             >
-              {hero.greeting}{" "}
-              <span className="bg-linear-to-r from-glow to-primary bg-clip-text text-transparent">
-                {hero.name}
+              {hero.greeting}
+              <span className="block bg-linear-to-r from-glow to-primary bg-clip-text text-transparent">
+                {nameWords.map((w, i) => (
+                  <span key={i}>
+                    {i > 0 && " "}
+                    <span className="whitespace-nowrap">{w}</span>
+                  </span>
+                ))}
               </span>
             </motion.h1>
 
