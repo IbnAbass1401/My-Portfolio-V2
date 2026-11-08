@@ -4,36 +4,55 @@ import EarthFallback from "./EarthFallback";
 // the whole 3D code (three.js and friends) is a separate file, fetched only when needed
 const EarthCanvas = lazy(() => import("./EarthCanvas"));
 
+// add ?globe=debug to the address to see the status on screen
+// add ?globe=force to skip the weak-device rules (for testing only)
+const mode =
+  typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("globe") : null;
+const DEBUG = mode === "debug" || mode === "force";
+const FORCE = mode === "force";
+
 function isPhoneOrTablet() {
   const ua = navigator.userAgent || "";
   if (/Android|iPhone|iPad|iPod|Mobile|Silk|Tablet/i.test(ua)) return true;
   return navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1; // iPad posing as a Mac
 }
 
+function deviceInfo() {
+  const c = navigator.connection;
+  return `${navigator.hardwareConcurrency ?? "?"} cores, ${navigator.deviceMemory ?? "?"} GB, net ${
+    c?.effectiveType ?? "?"
+  }${c?.saveData ? ", saveData" : ""}`;
+}
+
 // decides whether this device gets the 3D globe, and how
 function check3D() {
   if (typeof window === "undefined") return { reason: "no window" };
+
+  let webgl = false;
+  try {
+    const c = document.createElement("canvas");
+    webgl = Boolean(c.getContext("webgl2") || c.getContext("webgl"));
+  } catch {
+    webgl = false;
+  }
+  if (!webgl) return { reason: "WebGL is not available" };
+
+  const lite = isPhoneOrTablet() || window.innerWidth < 768;
+  if (FORCE) return { reason: null, lite };
+
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
     return { reason: "reduce motion is ON" };
 
   const conn = navigator.connection;
   if (conn?.saveData) return { reason: "data saver is ON" };
-  if (conn?.effectiveType && /(^|-)2g$|^3g$/.test(conn.effectiveType))
-    return { reason: `slow connection (${conn.effectiveType})` };
+  if (conn?.effectiveType && /2g$/.test(conn.effectiveType))
+    return { reason: `very slow connection (${conn.effectiveType})` };
 
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
     return { reason: `weak device (${navigator.hardwareConcurrency} CPU cores)` };
   if (navigator.deviceMemory && navigator.deviceMemory <= 2)
     return { reason: `low memory (${navigator.deviceMemory} GB)` };
 
-  try {
-    const c = document.createElement("canvas");
-    if (!(c.getContext("webgl2") || c.getContext("webgl"))) return { reason: "WebGL is not available" };
-  } catch {
-    return { reason: "WebGL check failed" };
-  }
-
-  const lite = isPhoneOrTablet() || window.innerWidth < 768;
   return { reason: null, lite };
 }
 
@@ -45,6 +64,7 @@ class Boundary extends Component {
   }
   componentDidCatch(error) {
     if (import.meta.env.DEV) console.error("[globe] 3D failed, keeping the orb:", error);
+    this.props.onError?.(error);
   }
   render() {
     return this.state.failed ? null : this.props.children;
@@ -56,28 +76,40 @@ export default function HeroGlobe() {
   const [ready, setReady] = useState(false);
   const [lite, setLite] = useState(false);
   const [active, setActive] = useState(true);
+  const [note, setNote] = useState("checking…");
   const box = useRef(null);
 
-  const onReady = useCallback(() => {
-    if (import.meta.env.DEV) console.info("[globe] textures loaded, showing the globe");
-    setReady(true);
+  const say = useCallback((msg) => {
+    if (import.meta.env.DEV) console.info(`[globe] ${msg}`);
+    if (DEBUG) setNote(msg);
   }, []);
+
+  const onReady = useCallback(() => {
+    say("loaded: showing the globe");
+    setReady(true);
+  }, [say]);
+
+  const onError = useCallback(
+    (error) => say(`FAILED: ${error?.message || String(error)}`),
+    [say]
+  );
 
   // decide, then start when the page is calm
   useEffect(() => {
     const { reason, lite: isLite } = check3D();
     if (reason) {
-      if (import.meta.env.DEV) console.info(`[globe] 3D is off: ${reason}`);
+      say(`off: ${reason}`);
       return;
     }
     setLite(isLite);
+    say(isLite ? "allowed (lite). waiting for first scroll, tap, or 6s" : "allowed. starting when idle");
 
     let started = false;
     const cleanups = [];
     const start = () => {
       if (started) return;
       started = true;
-      if (import.meta.env.DEV) console.info(`[globe] starting 3D${isLite ? " (lite)" : ""}`);
+      say(`downloading 3D${isLite ? " (lite)" : ""}…`);
       setEnabled(true);
     };
 
@@ -98,7 +130,7 @@ export default function HeroGlobe() {
       cleanups.push(() => window.clearTimeout(id));
     }
     return () => cleanups.forEach((fn) => fn());
-  }, []);
+  }, [say]);
 
   // pause the 3D while the hero is off screen
   useEffect(() => {
@@ -129,12 +161,21 @@ export default function HeroGlobe() {
             ready ? "opacity-100" : "opacity-0"
           }`}
         >
-          <Boundary>
+          <Boundary onError={onError}>
             <Suspense fallback={null}>
               <EarthCanvas onReady={onReady} lite={lite} active={active} />
             </Suspense>
           </Boundary>
         </div>
+      )}
+
+      {/* only visible with ?globe=debug */}
+      {DEBUG && (
+        <p className="absolute inset-x-0 -bottom-14 z-10 rounded-lg bg-black/80 px-3 py-2 text-center text-[11px] leading-snug text-glow">
+          {note}
+          <br />
+          <span className="text-muted">{deviceInfo()}</span>
+        </p>
       )}
     </div>
   );
