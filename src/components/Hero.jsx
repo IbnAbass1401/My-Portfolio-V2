@@ -44,8 +44,8 @@ export default function Hero() {
       >
         {/* glow background */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute -left-24 top-0 size-[420px] rounded-full bg-primary/25 blur-[120px]" />
-          <div className="absolute -right-24 bottom-0 size-[380px] rounded-full bg-glow/15 blur-[120px]" />
+          <div className="absolute -left-24 top-0 size-105 rounded-full bg-primary/25 blur-[120px]" />
+          <div className="absolute -right-24 bottom-0 size-95 rounded-full bg-glow/15 blur-[120px]" />
           <div
             className="absolute inset-0"
             style={{

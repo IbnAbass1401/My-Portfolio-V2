@@ -1,33 +1,40 @@
-import { Component, lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { Component, lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import EarthFallback from "./EarthFallback";
 
 // the whole 3D code (three.js and friends) is a separate file, fetched only when needed
 const EarthCanvas = lazy(() => import("./EarthCanvas"));
 
-// phones and tablets, including iPads that pretend to be a Mac
 function isPhoneOrTablet() {
   const ua = navigator.userAgent || "";
   if (/Android|iPhone|iPad|iPod|Mobile|Silk|Tablet/i.test(ua)) return true;
-  return navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  return navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1; // iPad posing as a Mac
 }
 
-// returns null when 3D is allowed, otherwise the reason it is switched off
-function whyNo3D() {
-  if (typeof window === "undefined") return "no window";
+// decides whether this device gets the 3D globe, and how
+function check3D() {
+  if (typeof window === "undefined") return { reason: "no window" };
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "reduce motion is ON";
-  if (isPhoneOrTablet()) return "phone or tablet";
-  if (window.innerWidth < 768) return `screen too narrow (${window.innerWidth}px, needs 768+)`;
-  if (navigator.connection?.saveData) return "data saver is ON";
+    return { reason: "reduce motion is ON" };
+
+  const conn = navigator.connection;
+  if (conn?.saveData) return { reason: "data saver is ON" };
+  if (conn?.effectiveType && /(^|-)2g$|^3g$/.test(conn.effectiveType))
+    return { reason: `slow connection (${conn.effectiveType})` };
+
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
-    return `weak device (${navigator.hardwareConcurrency} CPU cores)`;
+    return { reason: `weak device (${navigator.hardwareConcurrency} CPU cores)` };
+  if (navigator.deviceMemory && navigator.deviceMemory <= 2)
+    return { reason: `low memory (${navigator.deviceMemory} GB)` };
+
   try {
     const c = document.createElement("canvas");
-    if (!(c.getContext("webgl2") || c.getContext("webgl"))) return "WebGL is not available";
+    if (!(c.getContext("webgl2") || c.getContext("webgl"))) return { reason: "WebGL is not available" };
   } catch {
-    return "WebGL check failed";
+    return { reason: "WebGL check failed" };
   }
-  return null;
+
+  const lite = isPhoneOrTablet() || window.innerWidth < 768;
+  return { reason: null, lite };
 }
 
 // if the 3D code or a texture fails to load, stay on the orb instead of breaking the page
@@ -47,32 +54,65 @@ class Boundary extends Component {
 export default function HeroGlobe() {
   const [enabled, setEnabled] = useState(false);
   const [ready, setReady] = useState(false);
+  const [lite, setLite] = useState(false);
+  const [active, setActive] = useState(true);
+  const box = useRef(null);
+
   const onReady = useCallback(() => {
     if (import.meta.env.DEV) console.info("[globe] textures loaded, showing the globe");
     setReady(true);
   }, []);
 
-  // wait until the browser is idle, so the first paint is never slowed down
+  // decide, then start when the page is calm
   useEffect(() => {
-    const reason = whyNo3D();
+    const { reason, lite: isLite } = check3D();
     if (reason) {
       if (import.meta.env.DEV) console.info(`[globe] 3D is off: ${reason}`);
       return;
     }
+    setLite(isLite);
+
+    let started = false;
+    const cleanups = [];
     const start = () => {
-      if (import.meta.env.DEV) console.info("[globe] starting 3D");
+      if (started) return;
+      started = true;
+      if (import.meta.env.DEV) console.info(`[globe] starting 3D${isLite ? " (lite)" : ""}`);
       setEnabled(true);
     };
-    if ("requestIdleCallback" in window) {
+
+    if (isLite) {
+      // phones: wait for the first scroll or tap, or 6 seconds
+      const events = ["scroll", "touchstart", "pointerdown", "keydown"];
+      events.forEach((e) => window.addEventListener(e, start, { once: true, passive: true }));
+      const t = window.setTimeout(start, 6000);
+      cleanups.push(() => {
+        events.forEach((e) => window.removeEventListener(e, start));
+        window.clearTimeout(t);
+      });
+    } else if ("requestIdleCallback" in window) {
       const id = window.requestIdleCallback(start, { timeout: 2500 });
-      return () => window.cancelIdleCallback(id);
+      cleanups.push(() => window.cancelIdleCallback(id));
+    } else {
+      const id = window.setTimeout(start, 1500);
+      cleanups.push(() => window.clearTimeout(id));
     }
-    const id = window.setTimeout(start, 1500);
-    return () => window.clearTimeout(id);
+    return () => cleanups.forEach((fn) => fn());
   }, []);
 
+  // pause the 3D while the hero is off screen
+  useEffect(() => {
+    if (!enabled || !box.current || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), { threshold: 0 });
+    io.observe(box.current);
+    return () => io.disconnect();
+  }, [enabled]);
+
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-65 sm:max-w-85 md:max-w-110">
+    <div
+      ref={box}
+      className="relative mx-auto aspect-square w-full max-w-[260px] sm:max-w-[340px] md:max-w-[440px]"
+    >
       {/* the orb: shown first, fades out when the globe is ready */}
       <div
         className={`absolute inset-0 transition-opacity duration-700 ${
@@ -85,13 +125,13 @@ export default function HeroGlobe() {
       {enabled && (
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute inset-[-8%] transition-opacity duration-1000 ${
+          className={`pointer-events-none absolute -inset-[8%] transition-opacity duration-1000 ${
             ready ? "opacity-100" : "opacity-0"
           }`}
         >
           <Boundary>
             <Suspense fallback={null}>
-              <EarthCanvas onReady={onReady} />
+              <EarthCanvas onReady={onReady} lite={lite} active={active} />
             </Suspense>
           </Boundary>
         </div>
