@@ -15,6 +15,7 @@ const Footer = lazy(() => import("./components/Footer"));
 const ScrollProgress = lazy(() => import("./components/ScrollProgress"));
 const CursorGlow = lazy(() => import("./components/CursorGlow"));
 const BackToTop = lazy(() => import("./components/BackToTop"));
+const GameMode = lazy(() => import("./components/GameMode"));
 
 // rough heights so the page doesn't jump when the real sections replace the placeholders
 const heights = {
@@ -103,6 +104,7 @@ export default function App() {
           <ScrollProgress />
           <CursorGlow />
           <BackToTop />
+          <GameMode />
         </Suspense>
       )}
     </div>
