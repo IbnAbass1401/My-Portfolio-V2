@@ -144,7 +144,7 @@ export default function HeroGlobe() {
   return (
     <div
       ref={box}
-      className="relative mx-auto aspect-square w-full max-w-[260px] sm:max-w-[340px] md:max-w-[440px]"
+      className="relative mx-auto aspect-square w-full max-w-65 sm:max-w-85 md:max-w-110"
     >
       {/* the orb: shown first, fades out when the globe is ready */}
       <div
@@ -158,7 +158,7 @@ export default function HeroGlobe() {
       {enabled && (
         <div
           aria-hidden="true"
-          className={`absolute -inset-[8%] transition-opacity duration-1000 ${
+          className={`absolute inset-[-8%] transition-opacity duration-1000 ${
             ready ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >

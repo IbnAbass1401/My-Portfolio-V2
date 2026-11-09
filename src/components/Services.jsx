@@ -10,7 +10,7 @@ export default function Services() {
         {/* soft glow behind the grid */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[120px]"
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-105 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[120px]"
         />
 
         <div className="mx-auto max-w-6xl">
