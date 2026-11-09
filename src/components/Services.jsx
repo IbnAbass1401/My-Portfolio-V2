@@ -1,6 +1,7 @@
 import { motion, MotionConfig } from "framer-motion";
 import { services } from "../constants";
 import SectionHeading from "./SectionHeading";
+import ServiceIcon from "./ServiceIcon";
 
 export default function Services() {
   return (
@@ -9,7 +10,7 @@ export default function Services() {
         {/* soft glow behind the grid */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-105 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[120px]"
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[120px]"
         />
 
         <div className="mx-auto max-w-6xl">
@@ -33,17 +34,15 @@ export default function Services() {
 
                 <div
                   aria-hidden="true"
-                  className="relative flex size-12 items-center justify-center rounded-xl border border-line bg-bg text-2xl transition duration-300 group-hover:scale-110 group-hover:border-glow/60 group-hover:shadow-[0_0_20px_rgba(56,189,248,0.4)]"
+                  className="relative flex size-12 items-center justify-center rounded-xl border border-line bg-bg text-glow transition duration-300 group-hover:scale-110 group-hover:border-glow/60 group-hover:bg-glow/10 group-hover:shadow-[0_0_20px_rgba(56,189,248,0.4)]"
                 >
-                  {s.icon}
+                  <ServiceIcon title={s.title} />
                 </div>
 
                 <h3 className="relative mt-5 text-lg font-bold transition-colors group-hover:text-glow">
                   {s.title}
                 </h3>
-                <p className="relative mt-2 text-sm leading-relaxed text-muted">
-                  {s.text}
-                </p>
+                <p className="relative mt-2 text-sm leading-relaxed text-muted">{s.text}</p>
               </motion.li>
             ))}
           </ul>

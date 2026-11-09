@@ -23,42 +23,27 @@
       transform: translateX(-50%);
     }
   }
-
-  /* the GAME MODE tab glow */
-  --animate-gamepulse: gamepulse 2.6s ease-in-out infinite;
-  @keyframes gamepulse {
-    0%,
-    100% {
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
-    }
-    50% {
-      box-shadow: 0 0 28px rgba(56, 189, 248, 0.8);
-    }
-  }
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 72px; /* so the sticky navbar never covers section titles */
-  scrollbar-gutter: stable; /* the page never shifts sideways when scrolling is locked */
+  scroll-padding-top: 72px; 
   color-scheme: dark;
   -webkit-text-size-adjust: 100%; /* stable text size when a phone rotates */
   text-size-adjust: 100%;
-  overflow-x: hidden; /* older browsers */
-  overflow-x: clip; /* newer browsers: clips without making a scroll box */
+  overflow-x: hidden;
+  overflow-x: clip; 
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  overflow-x: hidden; /* older browsers */
+  overflow-x: hidden; 
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent; /* no grey flash when tapping links on mobile */
 }
-
-/* decorative glows are wider than a phone: clip them so the page never grows sideways */
 main section {
   overflow-x: hidden; /* older browsers */
   overflow-x: clip;
@@ -73,28 +58,6 @@ main section {
 ::selection {
   background: rgba(56, 189, 248, 0.3);
   color: #fff;
-}
-
-/* ---------- Game mode ---------- */
-/* the page cannot be scrolled by the user while the game runs (the game scrolls it itself) */
-html.game-mode,
-html.game-mode body {
-  overflow: hidden !important;
-}
-html.game-mode {
-  scroll-behavior: auto !important;
-}
-/* the navbar scrolls with the page, so its wall stays where it is drawn */
-html.game-mode header {
-  position: relative !important;
-}
-html.game-mode [aria-label="Back to top"] {
-  display: none !important;
-}
-/* scroll reveals that have not played yet: show them in their final place */
-html.game-mode [style*="opacity: 0"] {
-  opacity: 1 !important;
-  transform: none !important;
 }
 
 /* respect "reduce motion" */
